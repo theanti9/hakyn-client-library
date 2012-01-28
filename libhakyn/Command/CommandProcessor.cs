@@ -14,23 +14,27 @@ namespace libhakyn.Command
         public static List<byte> Queue = new List<byte>();
         public static bool processing = false;
         public static Thread runnerThread;
+        public static ManualResetEvent runnerReset;
+
+        public static void setup()
+        {
+            runnerReset = new ManualResetEvent(false);
+            runnerThread = new Thread(new ThreadStart(process));
+            runnerThread.Start();
+        }
 
 
         public static void enqueue(byte[] bytes)
         {
             Queue.AddRange(bytes);
-            if (processing == false)
-            {
-                runnerThread = new Thread(new ThreadStart(process));
-                runnerThread.Start();
-            }
+            runnerReset.Set();
         }
 
         private static void process()
         {
-            processing = true;
+            
 
-            // There's got to be at least a header to get
+            // There needs to be at least a header to get
             while (Queue.Count > 9)
             {
                 byte[] hak = Queue.GetRange(0, 3).ToArray();
@@ -43,14 +47,13 @@ namespace libhakyn.Command
 
                     if (CommandDelegates.CommandInitialized(ph.Command))
                     {
-                        // TODO: this is where we put the giant case statement
                         switch (ph.Command) 
                         {
-                            case 0x01:
+                            case 0x01:      // Update position
                                 CommandDelegates.UpdatePositionDelegate upd = (CommandDelegates.UpdatePositionDelegate)CommandDelegates.getInitializedDelegate(ph.Command);
                                 upd.Invoke(CommandParamsParser.parseBytes(pack.Body, ph.Command));
                                 break;
-                            case 0x02:
+                            case 0x02:      // Spawn Monster
                                 CommandDelegates.SpawnMonsterDelegate smd = (CommandDelegates.SpawnMonsterDelegate)CommandDelegates.getInitializedDelegate(ph.Command);
                                 smd.Invoke(CommandParamsParser.parseBytes(pack.Body, ph.Command));
                                 break;
@@ -69,9 +72,8 @@ namespace libhakyn.Command
                     continue;
                 }
             }
-
-
-            processing = false;
+            // Pause the thread. It will be resumed when data is enqueued.
+            runnerReset.WaitOne();
         }
 
     }
