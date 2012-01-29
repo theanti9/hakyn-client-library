@@ -1,2 +1,5 @@
 libhakyn/bin/*
 libhakyn/obj/*
+libhakyn-test/bin/*
+libhakyn-test/obj/*
+TestResults/*

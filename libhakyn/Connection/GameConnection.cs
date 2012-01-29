@@ -43,6 +43,8 @@ namespace libhakyn.Connection
                 // TODO write login packet to network here
                 writeRunnerThread = new Thread(new ThreadStart(handleOutgoing));
                 writeRunnerThread.Start();
+                readRunnerThread = new Thread(new ThreadStart(handleIncoming));
+                readRunnerThread.Start();
             }
             catch (Exception e)
             {

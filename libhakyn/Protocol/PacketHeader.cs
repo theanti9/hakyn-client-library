@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using libhakyn.Util;
+using System.Net;
 
 namespace libhakyn.Protocol
 {
@@ -20,7 +21,7 @@ namespace libhakyn.Protocol
             {
                 throw new ArgumentException("Fixed header did not begin with correct tag");
             }
-            this.Length = BitConverter.ToInt32(bytes, 4);
+            this.Length = BitConverter.ToInt32(ArrayUtil.ReverseBytes(ArrayUtil.ByteSubArray(bytes,3,4)), 0);
             this.Command = bytes[8];
         }
 
@@ -33,8 +34,8 @@ namespace libhakyn.Protocol
         public byte[] getBytes()
         {
             byte[] output = new byte[9];
-            Array.Copy(TAG.ToCharArray(), output, 3L);
-            Array.Copy(BitConverter.GetBytes(this.Length), 0, output, 3, 4);
+            Array.Copy(ASCIIEncoding.ASCII.GetBytes(TAG), output, 3);
+            Array.Copy(ArrayUtil.ReverseBytes(BitConverter.GetBytes(this.Length)), 0, output, 3, 4);
             Array.Copy(new Byte[] {0x00, this.Command}, 0, output, 7, 2);
             return output;
         }

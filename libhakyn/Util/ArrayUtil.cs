@@ -20,11 +20,19 @@ namespace libhakyn.Util
 
         public static byte[] StringToBytes(string str)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream ms = new MemoryStream();
-            bf.Serialize(ms, str);
-            ms.Seek(0, 0);
-            return ms.ToArray();
+            return System.Text.ASCIIEncoding.ASCII.GetBytes(str);
+        }
+
+        public static byte[] ReverseBytes(byte[] data)
+        {
+            byte[] output = new byte[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                output[i] = data[data.Length - i - 1];
+            }
+
+            return output;
         }
     }
 }
