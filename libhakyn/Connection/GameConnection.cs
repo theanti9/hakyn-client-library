@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
+using libhakyn.Command;
+
 namespace libhakyn.Connection
 {
     public class GameConnection
@@ -45,6 +47,7 @@ namespace libhakyn.Connection
                 writeRunnerThread.Start();
                 readRunnerThread = new Thread(new ThreadStart(handleIncoming));
                 readRunnerThread.Start();
+                Command.CommandProcessor.setup();
             }
             catch (Exception e)
             {
