@@ -51,7 +51,7 @@ namespace libhakyn.Connection
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace + e.Message);
             }
         }
 
@@ -74,7 +74,7 @@ namespace libhakyn.Connection
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace + e.Message);
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace libhakyn.Connection
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace + e.Message);
                 }
             }
         }
