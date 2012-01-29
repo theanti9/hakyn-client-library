@@ -15,7 +15,6 @@ namespace libhakyn.Connection
         private int port;
         private string token;
         private TcpClient client;
-        private NetworkStream networkStream;
         private static Thread writeRunnerThread;
         private static Thread readRunnerThread;
         private List<byte> outputQueue;
@@ -93,7 +92,7 @@ namespace libhakyn.Connection
                 try
                 {
                     byte[] buffer = new byte[BUFF_SIZE];
-                    int bytesRead = networkStream.Read(buffer, 0, BUFF_SIZE);
+                    int bytesRead = client.GetStream().Read(buffer, 0, BUFF_SIZE);
                     if (bytesRead > 0)
                     {
                         Command.CommandProcessor.Queue.AddRange(buffer);
