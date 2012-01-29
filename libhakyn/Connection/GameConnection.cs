@@ -41,13 +41,20 @@ namespace libhakyn.Connection
             client = new TcpClient();
             try
             {
-                client.Connect(host, port);
-                // TODO write login packet to network here
-                writeRunnerThread = new Thread(new ThreadStart(handleOutgoing));
-                writeRunnerThread.Start();
-                readRunnerThread = new Thread(new ThreadStart(handleIncoming));
-                readRunnerThread.Start();
                 Command.CommandProcessor.setup();
+                client.Connect(host, port);
+                if (client.Connected)
+                {
+                    // TODO write login packet to network here
+                    writeRunnerThread = new Thread(new ThreadStart(handleOutgoing));
+                    writeRunnerThread.Start();
+                    readRunnerThread = new Thread(new ThreadStart(handleIncoming));
+                    readRunnerThread.Start();
+                }
+                else
+                {
+                    Environment.Exit(1);
+                }
             }
             catch (Exception e)
             {
